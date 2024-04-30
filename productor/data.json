@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "nombre": "Erik Gomez",
+        "telefono": "2222897380",
+        "contrasena": "mi password"
+    },
+    {
+        "id": 2,
+        "nombre": "Fernando Franco",
+        "telefono": "2222897380",
+        "contrasena": "mi password"
+    }
+]

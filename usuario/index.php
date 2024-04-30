@@ -1,8 +1,4 @@
 <?php
-/********** Archivo de conexión *******/
-include '../conex.php';
-$mysqli = conexion();
-
 // Permitir solicitudes desde cualquier origen
 header('Access-Control-Allow-Origin: *');
 // Permitir métodos GET, POST, PUT, DELETE
@@ -11,60 +7,75 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-// Realiza la consulta SQL
-$sql = "SELECT 
-            p.id AS productor_id,
-            p.nombre AS nombre_productor,
-            i.id AS info_nopal_id,
-            i.fecha_cultivo,
-            i.lugar_cultivo
-        FROM Productor p
-        JOIN InfoNopal i ON p.id = i.productor_id
-        WHERE p.id = 1";
+    // Leer los datos del archivo JSON de productores
+    $json_productores = file_get_contents('../productor/data.json');
+    $productores = json_decode($json_productores, true);
 
-$result = $mysqli->query($sql);
+    // Leer los datos del archivo JSON de infonopal
+    $json_infonopal = file_get_contents('../infonopal/infonopal.json');
+    $infonopal = json_decode($json_infonopal, true);
 
-if ($result->num_rows > 0) {
-    // Almacena los resultados en un arreglo asociativo
-    $data = $result->fetch_assoc();
+    // Leer los datos del archivo JSON de revendedores
+    $json_revendedores = file_get_contents('../revendedores/revendedores.json');
+    $revendedores = json_decode($json_revendedores, true);
 
-    // Inicializa un arreglo para almacenar los detalles de los revendedores
-    $revendedores = array();
+    // Leer los datos del archivo JSON de infonopal_revendedores
+    $json_infonopal_revendedores = file_get_contents('../consultaReve_Produc/infonopal_revendedores.json');
+    $infonopal_revendedores = json_decode($json_infonopal_revendedores, true);
 
-    // Consulta SQL para obtener los detalles de los revendedores asociados
-    $sql_revendedores = "SELECT 
-                            r.id AS revendedor_id,
-                            r.nombre AS nombre_revendedor,
-                            r.nombre_negocio,
-                            r.lugar_ubicacion
-                        FROM Revendedores r
-                        JOIN InfoNopal_Revendedores ir ON r.id = ir.revendedor_id
-                        WHERE ir.info_nopal_id = " . $data['info_nopal_id'];
+    // Realiza la consulta para obtener los datos del productor con id 1
+    $productor_id = 1;
 
-    $result_revendedores = $mysqli->query($sql_revendedores);
-
-    if ($result_revendedores->num_rows > 0) {
-        // Procesa los resultados de los revendedores y los agrupa por fila principal
-        while ($row_revendedor = $result_revendedores->fetch_assoc()) {
-            $revendedores[] = $row_revendedor;
+    // Buscar el productor con el id especificado
+    $productor = null;
+    foreach ($productores as $p) {
+        if ($p['id'] == $productor_id) {
+            $productor = $p;
+            break;
         }
     }
 
-    // Agrega los detalles de los revendedores al arreglo principal
-    $data['revendedores'] = $revendedores;
+    if ($productor !== null) {
+        // Buscar los datos de infonopal asociados al productor
+        $info_nopal_productor = null;
+        foreach ($infonopal as $i) {
+            if ($i['id'] == $productor['id']) {
+                $info_nopal_productor = $i;
+                break;
+            }
+        }
 
-    // Codifica el arreglo asociativo en formato JSON
-    $json_response = json_encode($data);
+        // Inicializa un arreglo para almacenar los detalles de los revendedores
+        $revendedores_productor = array();
 
-    // Envía la respuesta JSON
-    echo $json_response;
-} else {
-    // Si no se encontraron resultados, devuelve un mensaje JSON vacío
-    echo json_encode(array("message" => "No se encontraron datos"));
-}
+        // Buscar los detalles de los revendedores asociados al productor
+        foreach ($infonopal_revendedores as $ir) {
+            if ($ir['info_nopal_id'] == $productor['id']) {
+                // Buscar el revendedor asociado al infonopal_revendedores
+                foreach ($revendedores as $r) {
+                    if ($r['id'] == $ir['revendedor_id']) {
+                        // Agregar los detalles del revendedor al arreglo
+                        $revendedores_productor[] = $r;
+                    }
+                }
+            }
+        }
 
-// Liberar los resultados y cerrar la conexión a la base de datos
-$result->free_result();
-$mysqli->close();
+        // Agregar los detalles de los revendedores al arreglo del productor
+        $productor['info_nopal'] = $info_nopal_productor;
+        $productor['revendedores'] = $revendedores_productor;
+
+        // Codificar el arreglo en formato JSON
+        $json_response = json_encode($productor, JSON_PRETTY_PRINT);
+
+        // Guardar los datos en un archivo JSON
+        file_put_contents('productor_info.json', $json_response);
+
+        // Enviar la respuesta JSON
+        echo $json_response;
+    } else {
+        // Si no se encontró el productor, devolver un mensaje de error JSON
+        echo json_encode(array("message" => "No se encontraron datos del productor con id 1"));
+    }
 }
 ?>

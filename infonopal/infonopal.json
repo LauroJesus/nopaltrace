@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "fecha_cultivo": "25-04-2024",
+        "lugar_cultivo": "Campo 3",
+        "foto_lugar": "photo.img",
+        "link_video": "google.com",
+        "consumir_antes": "12-04-2024",
+        "productor_id": "1"
+    },
+    {
+        "id": 2,
+        "fecha_cultivo": "15-04-2024",
+        "lugar_cultivo": "Campo 1",
+        "foto_lugar": "photo2.img",
+        "link_video": "youtube.com",
+        "consumir_antes": "01-04-2024",
+        "productor_id": "1"
+    },
+    {
+        "id": 3,
+        "fecha_cultivo": "15-04-2024",
+        "lugar_cultivo": "Campo 1",
+        "foto_lugar": "photo2.img",
+        "link_video": "youtube.com",
+        "consumir_antes": "01-04-2024",
+        "productor_id": "2"
+    }
+]

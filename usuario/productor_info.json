@@ -1,0 +1,33 @@
+{
+    "id": 1,
+    "nombre": "Erik Gomez",
+    "telefono": "2222897380",
+    "contrasena": "mi password",
+    "info_nopal": {
+        "id": 1,
+        "fecha_cultivo": "25-04-2024",
+        "lugar_cultivo": "Campo 3",
+        "foto_lugar": "photo.img",
+        "link_video": "google.com",
+        "consumir_antes": "12-04-2024",
+        "productor_id": "1"
+    },
+    "revendedores": [
+        {
+            "id": 1,
+            "nombre": "Revendedor 1",
+            "nombre_negocio": "Tienda1",
+            "lugar_ubicacion": "mi password",
+            "telefono": "111111111",
+            "contrasena": "1111111111"
+        },
+        {
+            "id": 2,
+            "nombre": "Revendedor 2",
+            "nombre_negocio": "Tienda2",
+            "lugar_ubicacion": "mi password",
+            "telefono": "111111111",
+            "contrasena": "1111111111"
+        }
+    ]
+}

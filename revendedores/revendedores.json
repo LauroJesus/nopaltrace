@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "nombre": "Revendedor 1",
+        "nombre_negocio": "Tienda1",
+        "lugar_ubicacion": "mi password",
+        "telefono": "111111111",
+        "contrasena": "1111111111"
+    },
+    {
+        "id": 2,
+        "nombre": "Revendedor 2",
+        "nombre_negocio": "Tienda2",
+        "lugar_ubicacion": "mi password",
+        "telefono": "111111111",
+        "contrasena": "1111111111"
+    }
+]
